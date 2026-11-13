@@ -1,45 +1,164 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jarvis Assistant</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
-  </head>
-  <body>
-    <div class="app-shell">
-      <div class="glass-panel">
-        <header class="topbar">
-          <div>
-            <p class="eyebrow">Offline AI</p>
-            <h1>JARVIS</h1>
-          </div>
-          <button id="listenBtn" class="primary-btn">🎤 Listen</button>
-        </header>
+* {
+  box-sizing: border-box;
+}
 
-        <div class="status-box">
-          <span class="status-dot"></span>
-          <span id="statusText">Ready for voice input</span>
-        </div>
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at top, #0c1d37, #010812 60%);
+  color: #edf6ff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-        <div class="chat-box" id="chatBox">
-          <div class="assistant-message">
-            Hello, I am Jarvis. Ask me anything simple, or just say hello.
-          </div>
-        </div>
+.app-shell {
+  width: min(90vw, 780px);
+}
 
-        <form id="commandForm" class="input-row">
-          <input
-            id="commandInput"
-            type="text"
-            placeholder="Type a command or ask a question"
-            autocomplete="off"
-          />
-          <button type="submit" class="send-btn">Send</button>
-        </form>
-      </div>
-    </div>
+.glass-panel {
+  background: rgba(18, 28, 46, 0.72);
+  border: 1px solid rgba(135, 180, 255, 0.2);
+  border-radius: 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  padding: 28px;
+}
 
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-  </body>
-</html>
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0;
+  font-size: 11px;
+  letter-spacing: 0.22rem;
+  color: #7fd2ff;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 8px 0 0;
+  font-size: clamp(2rem, 4vw, 3rem);
+  letter-spacing: 0.2rem;
+}
+
+.primary-btn,
+.send-btn {
+  border: 0;
+  border-radius: 14px;
+  padding: 12px 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #66d9ff, #3d77ff);
+  color: #07111d;
+}
+
+.send-btn {
+  background: linear-gradient(135deg, #7ef3c7, #34d399);
+  color: #041612;
+}
+
+.primary-btn:hover,
+.send-btn:hover {
+  transform: translateY(-1px);
+}
+
+.status-box {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 999px;
+  padding: 8px 14px;
+  margin-bottom: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d8ebff;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3ae47a;
+  box-shadow: 0 0 14px #3ae47a;
+}
+
+.chat-box {
+  min-height: 260px;
+  max-height: 380px;
+  overflow-y: auto;
+  border-radius: 18px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(4, 10, 19, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.assistant-message,
+.user-message {
+  padding: 12px 16px;
+  border-radius: 16px;
+  max-width: 80%;
+  line-height: 1.5;
+}
+
+.assistant-message {
+  align-self: flex-start;
+  background: rgba(110, 181, 255, 0.12);
+  border: 1px solid rgba(110, 181, 255, 0.18);
+}
+
+.user-message {
+  align-self: flex-end;
+  background: rgba(74, 222, 128, 0.14);
+  border: 1px solid rgba(74, 222, 128, 0.2);
+}
+
+.input-row {
+  display: flex;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+#commandInput {
+  flex: 1;
+  background: rgba(7, 13, 24, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  color: white;
+  padding: 14px 16px;
+  font-size: 1rem;
+}
+
+#commandInput:focus {
+  outline: 2px solid rgba(102, 217, 255, 0.5);
+}
+
+@media (max-width: 600px) {
+  .glass-panel {
+    padding: 18px;
+  }
+
+  .topbar,
+  .input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .assistant-message,
+  .user-message {
+    max-width: 100%;
+  }
+}

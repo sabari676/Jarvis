@@ -1,125 +1,45 @@
-import datetime
-import json
-import os
-import platform
-import random
-import subprocess
-import webbrowser
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="glass-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Offline AI</p>
+            <h1>JARVIS</h1>
+          </div>
+          <button id="listenBtn" class="primary-btn">🎤 Listen</button>
+        </header>
 
-from flask import Flask, jsonify, render_template, request
+        <div class="status-box">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready for voice input</span>
+        </div>
 
-app = Flask(__name__)
+        <div class="chat-box" id="chatBox">
+          <div class="assistant-message">
+            Hello, I am Jarvis. Ask me anything simple, or say hello.
+          </div>
+        </div>
 
+        <form id="commandForm" class="input-row">
+          <input
+            id="commandInput"
+            type="text"
+            placeholder="Type a command or ask a question"
+            autocomplete="off"
+          />
+          <button type="submit" class="send-btn">Send</button>
+        </form>
+      </div>
+    </div>
 
-def speak_text(message):
-    """Use local text-to-speech if available on the machine."""
-    try:
-        import pyttsx3
-
-        engine = pyttsx3.init()
-        engine.say(message)
-        engine.runAndWait()
-    except Exception:
-        pass
-
-
-def open_local_app(app_name):
-    system = platform.system().lower()
-    if system == "windows":
-        if app_name in {"notepad", "editor"}:
-            os.startfile("notepad.exe")
-            return "Opening Notepad."
-        if app_name in {"cmd", "terminal", "command prompt"}:
-            os.startfile("cmd.exe")
-            return "Opening the terminal."
-    elif system == "darwin":
-        if app_name in {"notepad", "editor"}:
-            subprocess.Popen(["open", "-a", "TextEdit"])
-            return "Opening TextEdit."
-    else:
-        if app_name in {"notepad", "editor"}:
-            subprocess.Popen(["xdg-open", "/usr/share/applications/"])
-            return "Opening the default editor."
-    return f"I can't open {app_name} automatically on this machine."
-
-
-def parse_command(text):
-    text = (text or "").strip().lower()
-    if not text:
-        return "I didn't catch that. Please say or type a command."
-
-    if any(word in text for word in ["hello", "hi", "hey"]):
-        return "Hello, I am Jarvis. How can I help you today?"
-
-    if any(word in text for word in ["who are you", "your name"]):
-        return "I am Jarvis, your offline voice assistant."
-
-    if any(word in text for word in ["time", "clock"]):
-        return f"The current time is {datetime.datetime.now().strftime('%I:%M %p')}."
-
-    if any(word in text for word in ["date", "day"]):
-        return f"Today is {datetime.datetime.now().strftime('%A, %B %d, %Y')}."
-
-    if "joke" in text:
-        jokes = [
-            "Why do programmers prefer dark mode? Because light attracts bugs.",
-            "I told my computer I needed a break, and now it sends me to sleep mode.",
-            "Programming is 10 percent writing code and 90 percent debugging the code you just wrote."
-        ]
-        return random.choice(jokes)
-
-    if "open browser" in text or "launch browser" in text:
-        webbrowser.open("https://www.google.com")
-        return "Opening your browser."
-
-    if "open youtube" in text:
-        webbrowser.open("https://www.youtube.com")
-        return "Opening YouTube."
-
-    if "open github" in text:
-        webbrowser.open("https://github.com")
-        return "Opening GitHub."
-
-    if any(word in text for word in ["open notepad", "open editor", "launch notepad"]):
-        return open_local_app("notepad")
-
-    if "search for" in text:
-        query = text.replace("search for", "").strip()
-        if query:
-            webbrowser.open(f"https://www.google.com/search?q={query.replace(' ', '+')}")
-            return f"Searching for {query}."
-
-    if "weather" in text:
-        return "I cannot fetch live weather without an internet connection or a weather API. I can still help with time, web searches, and local tools."
-
-    if "shutdown" in text or "power off" in text:
-        return "I can help with local commands, but I won't power off or restart your system without your permission."
-
-    if "thank you" in text or "thanks" in text:
-        return "You're welcome. I am here to help."
-
-    return (
-        "I can help with time, date, jokes, browser searches, opening local apps, and basic commands. "
-        "Try saying: hello, what time is it, open browser, or search for AI."
-    )
-
-
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-@app.route("/api/assistant", methods=["POST"])
-def assistant_api():
-    data = request.get_json(silent=True) or {}
-    text = data.get("text", "")
-    result = parse_command(text)
-    try:
-        speak_text(result)
-    except Exception:
-        pass
-    return jsonify({"response": result})
-
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
