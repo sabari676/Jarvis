@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jarvis Assistant</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <div class="glass-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Offline AI</p>
+            <h1>JARVIS</h1>
+          </div>
+          <button id="listenBtn" class="primary-btn">🎤 Listen</button>
+        </header>
+
+        <div class="status-box">
+          <span class="status-dot"></span>
+          <span id="statusText">Ready for voice input</span>
+        </div>
+
+        <div class="chat-box" id="chatBox">
+          <div class="assistant-message">
+            Hello, I am Jarvis. Ask me anything simple, or just say hello.
+          </div>
+        </div>
+
+        <form id="commandForm" class="input-row">
+          <input
+            id="commandInput"
+            type="text"
+            placeholder="Type a command or ask a question"
+            autocomplete="off"
+          />
+          <button type="submit" class="send-btn">Send</button>
+        </form>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+  </body>
+</html>
